@@ -31,12 +31,18 @@ public class MainActivity extends AppCompatActivity
     //area = base and height
     //perimeter = side a, side b, side c (Pythagorean)
 
+    //For square/rectangle container
     EditText et_j_length;
     EditText et_j_width;
     ConstraintLayout cons_j_squareRectView;
     Spinner sp_j_shapes;
     TextView tv_j_areaPerimeter;
     ArrayAdapter <String> spinnerAdapter;
+
+    //For circle container
+    EditText et_j_radius;
+    TextView tv_j_areaPerimeterCircle;
+    ConstraintLayout cont_j_circleView;
 
 
     @Override
@@ -51,11 +57,20 @@ public class MainActivity extends AppCompatActivity
             return insets;
         });
 
+        //Square and Rectangle
         et_j_length = findViewById(R.id.et_v_length);
         et_j_width = findViewById(R.id.et_v_width);
         cons_j_squareRectView = findViewById(R.id.cont_v_squareRectangle);
         sp_j_shapes = findViewById(R.id.sp_v_shapes);
         tv_j_areaPerimeter = findViewById(R.id.tv_v_computedValues);
+
+        //Circle
+        et_j_radius = findViewById(R.id.et_v_radius);
+        tv_j_areaPerimeterCircle = findViewById(R.id.tv_v_computedAreaPerimeterCircle);
+        cont_j_circleView = findViewById(R.id.cont_v_circle);
+
+        //Triangle
+        //Fill in for demo homework DUE SUNDAY, 9/21 (Along with Java on CodingBat)
 
         //Because we are making a simple drop down menu (spinner) that will only contain
         //strings as options. We can use a string array with the built-in array adapter
@@ -71,6 +86,7 @@ public class MainActivity extends AppCompatActivity
 
         setupSpinnerChangeListener();
         textChangeListenerSquareRect();
+        textChangeListenerCircle();
 
     }
     //--------------------
@@ -89,18 +105,19 @@ public class MainActivity extends AppCompatActivity
                     //square
                     cons_j_squareRectView.setVisibility(View.VISIBLE);
                     //not showing for circle and triangle
+                    hideConstraintView(cont_j_circleView);
                 }
                 else if(position == 1)
                 {
                     //rectangle
                     cons_j_squareRectView.setVisibility(View.VISIBLE);
                     //not showing for circle and triangle
-
+                    hideConstraintView(cont_j_circleView);
                 }
                 else if(position == 2)
                 {
                     //circle
-
+                    cont_j_circleView.setVisibility(View.VISIBLE);
                     //not showing for square and rectangle
 
                     hideConstraintView(cons_j_squareRectView);
@@ -110,8 +127,8 @@ public class MainActivity extends AppCompatActivity
                     //triangle
 
                     //not showing for square and rectangle
-
                     hideConstraintView(cons_j_squareRectView);
+                    hideConstraintView(cont_j_circleView);
                 }
             }
 
@@ -176,6 +193,27 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void textChangeListenerCircle()
+    {
+        et_j_radius.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                setAreaPerimeterCircle(et_j_radius.getText().toString());
+            }
+        });
+    }
+
     public void setAreaAndPerimeterSquareRect(String lengthS, String widthS)
     {
         if(lengthS.isEmpty() || widthS.isEmpty())
@@ -183,9 +221,9 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        //convert the string to an integer so we can do math
-        double length = Integer.parseInt(lengthS);
-        double width = Integer.parseInt(widthS);
+        //convert the string to a double so we can do math
+        double length = Double.parseDouble(lengthS);
+        double width = Double.parseDouble(widthS);
 
         double area = length * width;
 
@@ -194,4 +232,20 @@ public class MainActivity extends AppCompatActivity
         tv_j_areaPerimeter.setText("Area = " + area + "\n Perimeter = " + perimeter);
     }
 
+    public void setAreaPerimeterCircle(String radiusS)
+    {
+        if(radiusS.isEmpty())
+        {
+            return;
+        }
+
+        double radius = Double.parseDouble(radiusS);
+        double pi = Math.PI;
+
+        double area = pi * Math.pow(radius, 2);
+
+        double perimeter = 2 * pi * radius;
+
+        tv_j_areaPerimeterCircle.setText("Area = " + area + "\n Perimeter =" + perimeter);
+    }
 }
